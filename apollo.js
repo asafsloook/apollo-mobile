@@ -1538,7 +1538,7 @@ async function start_() {
 
 
             for (let y = start; y < end * ratio; y += do_.draw_inc) {
-
+                if(R.random_bool(0.5)) await waiter(1);
                     for (let x = start; x < end; x += do_.draw_inc) {
                         if (R.random_bool(options.stroke)) continue;
                         let { c, id, shape } = helper[`${x}_${y}`];
