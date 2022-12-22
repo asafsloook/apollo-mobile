@@ -52,7 +52,7 @@ class Random {
     }
 }
 
-let DEFAULT_SIZE = 500, R = new Random(), DIM, M, colors = {}, grid = 0,
+let DEFAULT_SIZE = 1000, R = new Random(), DIM, M, colors = {}, grid = 0,
     options = {}, shapes = [], intersections = {}, intersectionsSizes = {},
     lines = { vert: {}, horiz: {}, diagonal: [] }, bg = '#e0dacc', min_stroke = 1,
     max_stroke = 2.5, helper = {}, state = { color: 0, grain: 0 }, density = 2;
@@ -1505,7 +1505,7 @@ function start_() {
 
                 state.color++;
             }
-        },)
+        }, 33)
     }
     setTimeout(() => {
         if (options.shapes_border) {
@@ -1534,7 +1534,7 @@ function start_() {
                         if (c_.levels[3] > 50) state.grain++;
 
                     }
-                },)
+                }, 33)
             }
 
             setTimeout(() => {
@@ -1556,9 +1556,9 @@ function start_() {
                 }, 100)
 
 
-            }, DEFAULT_SIZE)
+            }, DEFAULT_SIZE * 33)
         }
-    }, DEFAULT_SIZE)
+    }, DEFAULT_SIZE* 33)
 }
 
 function saveIntersectionSizes(x, y, id) {
