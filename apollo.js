@@ -1505,7 +1505,7 @@ function start_() {
 
                 state.color++;
             }
-        }, 33)
+        }, 0)
     }
     setTimeout(() => {
         if (options.shapes_border) {
@@ -1534,7 +1534,7 @@ function start_() {
                         if (c_.levels[3] > 50) state.grain++;
 
                     }
-                }, 33)
+                }, 0)
             }
 
             setTimeout(() => {
@@ -1556,9 +1556,9 @@ function start_() {
                 }, 100)
 
 
-            }, DEFAULT_SIZE * 33)
+            }, DEFAULT_SIZE)
         }
-    }, DEFAULT_SIZE* 33)
+    }, DEFAULT_SIZE)
 }
 
 function saveIntersectionSizes(x, y, id) {
