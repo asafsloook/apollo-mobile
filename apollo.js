@@ -1211,7 +1211,7 @@ function manageRadius(radius, x, y) {
     return radius;
 }
 
-function shapesBorder(noFrame) {
+async function shapesBorder(noFrame) {
     min_stroke = 0;
     max_stroke = 2;
     noStroke();
@@ -1222,6 +1222,7 @@ function shapesBorder(noFrame) {
     const count = 5 * frameUp / (bgDown * typeDown);
     const count_ = Math.min(count, 20)
     for (let i = 0; i < count_; i++) {
+        await waiter(33)
         for (let i = 0; i < shapes.length; i++) {
             let shape = shapes[i]
             drawOneShape(shape, noFrame)
@@ -1475,7 +1476,7 @@ async function start_() {
         return;
     }
 
-    shapesBorder();
+    await shapesBorder();
     randomSketching();
     noStroke();
 
