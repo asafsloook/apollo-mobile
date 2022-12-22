@@ -52,7 +52,7 @@ class Random {
     }
 }
 
-let DEFAULT_SIZE = 1000, R = new Random(), DIM, M, colors = {}, grid = 0,
+let DEFAULT_SIZE = 500, R = new Random(), DIM, M, colors = {}, grid = 0,
     options = {}, shapes = [], intersections = {}, intersectionsSizes = {},
     lines = { vert: {}, horiz: {}, diagonal: [] }, bg = '#e0dacc', min_stroke = 1,
     max_stroke = 2.5, helper = {}, state = { color: 0, grain: 0 }, density = 2;
