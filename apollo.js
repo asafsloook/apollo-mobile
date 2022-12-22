@@ -1451,7 +1451,15 @@ function stopDraw(shape, x, y, s) {
     return false;
 }
 
-function start_() {
+async function waiter(timeout){
+    return new Promise((resolve)=>{
+        setTimeout(() => {
+            resolve();
+        }, timeout);
+    })
+}
+
+async function start_() {
     setAllShapes();
     if (options.less) setLessShapes();
 
@@ -1485,10 +1493,11 @@ function start_() {
         size: 0.99 * M * (M > 1 ? 1.2 : 1)
     }
     for (let y = start; y < end * ratio; y += do_.draw_inc) {
-        setTimeout(async () => {
+
+        await waiter(1);
             for (let x = start; x < end; x += do_.draw_inc) {
 
-                let { c, id, shape } = await setColors(x, y);
+                let { c, id, shape } = setColors(x, y);
 
                 helper[`${x}_${y}`] = { c, id, shape };
 
@@ -1505,14 +1514,12 @@ function start_() {
 
                 state.color++;
             }
-        }, 33)
     }
-    setTimeout(() => {
         if (options.shapes_border) {
 
 
             for (let y = start; y < end * ratio; y += do_.draw_inc) {
-                setTimeout(() => {
+                await waiter(33);
                     for (let x = start; x < end; x += do_.draw_inc) {
                         if (R.random_bool(options.stroke)) continue;
                         let { c, id, shape } = helper[`${x}_${y}`];
@@ -1534,31 +1541,24 @@ function start_() {
                         if (c_.levels[3] > 50) state.grain++;
 
                     }
-                }, 33)
             }
 
+            console.log(`color ${state.color}`)
+
+            console.log(`grain ${state.grain}`)
+
+            shapesBorder(true);
+            randomSketching();
+            console.log(options)
+
             setTimeout(() => {
-
-                console.log(`color ${state.color}`)
-
-                console.log(`grain ${state.grain}`)
-
-                shapesBorder(true);
-                randomSketching();
-                console.log(options)
-
-                setTimeout(() => {
-                    setMetadataAndComplete();
-                    // save(window.params.seed + '.jpeg');
-                    // setTimeout(() => {
-                    //     location.reload();
-                    // }, 100)
-                }, 100)
-
-
-            }, DEFAULT_SIZE*33)
+                setMetadataAndComplete();
+                // save(window.params.seed + '.jpeg');
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 100)
+            }, 100)
         }
-    }, DEFAULT_SIZE*33)
 }
 
 function saveIntersectionSizes(x, y, id) {
@@ -1615,30 +1615,28 @@ function isPointInSquare(x, y, shape) {
 }
 
 function isShapeCollide(x, y) {
-    return new Promise((resolve)=>{
-        let res = [];
-        for (let i = 0; i < shapes.length; i++) {
-            let shape = shapes[i];
-    
-            if (shape.type === 'circle')
-                if (isPointInCircle(x, y, shape))
-                    res.push(shape);
-    
-            if (['square', 'rectangle'].includes(shape.type))
-                if (isPointInSquare(x, y, shape))
-                    res.push(shape);
-    
-            if (shape.type === 'triangle')
-                if (isPointInTriangle({ x, y }, shape.p1, shape.p2, shape.p3))
-                    res.push(shape);
-        }
-        if (res.length > 0) resolve(res);
-        resolve('stop');
-    })
+    let res = [];
+    for (let i = 0; i < shapes.length; i++) {
+        let shape = shapes[i];
+
+        if (shape.type === 'circle')
+            if (isPointInCircle(x, y, shape))
+                res.push(shape);
+
+        if (['square', 'rectangle'].includes(shape.type))
+            if (isPointInSquare(x, y, shape))
+                res.push(shape);
+
+        if (shape.type === 'triangle')
+            if (isPointInTriangle({ x, y }, shape.p1, shape.p2, shape.p3))
+                res.push(shape);
+    }
+    if (res.length > 0) return res;
+    return 'stop';
 }
 
-async function setColors(x, y) {
-    let shape = await isShapeCollide(x, y);
+function setColors(x, y) {
+    let shape = isShapeCollide(x, y);
     if (shape === 'stop') return { shape };
     let id = saveIntersection(shape);
     let c = intersections[id];
