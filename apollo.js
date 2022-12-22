@@ -1494,7 +1494,7 @@ async function start_() {
     }
     for (let y = start; y < end * ratio; y += do_.draw_inc) {
 
-        await waiter(1);
+        await waiter(33);
             for (let x = start; x < end; x += do_.draw_inc) {
 
                 let { c, id, shape } = setColors(x, y);
@@ -1519,8 +1519,7 @@ async function start_() {
 
 
             for (let y = start; y < end * ratio; y += do_.draw_inc) {
-                await waiter(1);
-                
+
                     for (let x = start; x < end; x += do_.draw_inc) {
                         if (R.random_bool(options.stroke)) continue;
                         let { c, id, shape } = helper[`${x}_${y}`];
