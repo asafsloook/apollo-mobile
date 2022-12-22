@@ -1222,7 +1222,7 @@ async function shapesBorder(noFrame) {
     const count = 5 * frameUp / (bgDown * typeDown);
     const count_ = Math.min(count, 20)
     for (let i = 0; i < count_; i++) {
-        await waiter(33)
+        await waiter(1)
         for (let i = 0; i < shapes.length; i++) {
             let shape = shapes[i]
             drawOneShape(shape, noFrame)
@@ -1495,7 +1495,7 @@ async function start_() {
     }
     for (let y = start; y < end * ratio; y += do_.draw_inc) {
 
-        await waiter(33);
+        await waiter(1);
             for (let x = start; x < end; x += do_.draw_inc) {
 
                 let { c, id, shape } = setColors(x, y);
