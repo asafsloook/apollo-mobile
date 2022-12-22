@@ -1493,14 +1493,32 @@ async function start_() {
         draw_inc: 0.5,
         size: 0.99 * M * (M > 1 ? 1.2 : 1)
     }
+
+
     for (let y = start; y < end * ratio; y += do_.draw_inc) {
 
-        if(R.random_bool(0.5)) await waiter(1);
             for (let x = start; x < end; x += do_.draw_inc) {
 
                 let { c, id, shape } = setColors(x, y);
 
                 helper[`${x}_${y}`] = { c, id, shape };
+
+                if (c === 'BLANK') continue;
+
+                if (R.random_bool(options.stroke) || c === bg) continue;
+
+                if (options.out_frame && stopDraw(shape, x, y, s)) continue;
+
+                if (shape === 'stop') continue;
+            }
+    }
+
+    for (let y = start; y < end * ratio; y += do_.draw_inc) {
+
+        if(R.random_bool(0.5)) await waiter(1);
+            for (let x = start; x < end; x += do_.draw_inc) {
+
+                let { c, shape } = helper[`${x}_${y}`];
 
                 if (c === 'BLANK') continue;
 
