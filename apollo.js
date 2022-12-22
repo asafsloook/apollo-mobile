@@ -53,7 +53,7 @@ class Random {
 }
 
 let DEFAULT_SIZE = 1000, R = new Random(), DIM, M, colors = {}, grid = 0,
-    options = {}, shapes = [], intersections = {}, intersectionsSizes = {},
+    options = {}, shapes = [], intersections = {},
     lines = { vert: {}, horiz: {}, diagonal: [] }, bg = '#e0dacc', min_stroke = 1,
     max_stroke = 2.5, helper = {}, state = { color: 0, grain: 0 }, density = 2;
 
@@ -981,7 +981,7 @@ function setOneShape(r, c, shape_, size_, rect_) {
 
     let id = genId();
     let color = randomColor();
-    intersections[id] = color
+    intersections[id] = {color}
 
     switch (shape) {
         case 'circle':
@@ -1494,31 +1494,14 @@ async function start_() {
         size: 0.99 * M * (M > 1 ? 1.2 : 1)
     }
 
-
-    for (let y = start; y < end * ratio; y += do_.draw_inc) {
-
-            for (let x = start; x < end; x += do_.draw_inc) {
-
-                let { c, id, shape } = setColors(x, y);
-
-                helper[`${x}_${y}`] = { c, id, shape };
-
-                if (c === 'BLANK') continue;
-
-                if (R.random_bool(options.stroke) || c === bg) continue;
-
-                if (options.out_frame && stopDraw(shape, x, y, s)) continue;
-
-                if (shape === 'stop') continue;
-            }
-    }
-
     for (let y = start; y < end * ratio; y += do_.draw_inc) {
 
         if(R.random_bool(0.5)) await waiter(1);
             for (let x = start; x < end; x += do_.draw_inc) {
 
-                let { c, shape } = helper[`${x}_${y}`];
+                let { c, id, shape } = setColors(x, y);
+
+                helper[`${x}_${y}`] = { c, id, shape };
 
                 if (c === 'BLANK') continue;
 
@@ -1538,7 +1521,7 @@ async function start_() {
 
 
             for (let y = start; y < end * ratio; y += do_.draw_inc) {
-                if(R.random_bool(0.5)) await waiter(1);
+                if(R.random_bool(0.25)) await waiter(1);
                     for (let x = start; x < end; x += do_.draw_inc) {
                         if (R.random_bool(options.stroke)) continue;
                         let { c, id, shape } = helper[`${x}_${y}`];
@@ -1547,13 +1530,13 @@ async function start_() {
 
                         if (shape === 'stop') continue;
                         if (c === 'BLANK') continue;
-                        let pos = intersectionsSizes[id];
+                        let pos = intersections[id];
                         let opacity = map(y, pos.yMin, pos.yMax, pos.min1, pos.max1);
                         if (options.texture_dir === 'x') opacity = map(x, pos.xMin, pos.xMax, pos.min1, pos.max1);
                         if (pos.reverse) opacity = (1 - opacity);
                         let mm = R.random_num(0.9, 1.1);
                         let c_ = color('#111');
-                        c_.setAlpha(opacity * 255 * (intersections[id] !== bg ? options.colors_grain : 1) * mm)
+                        c_.setAlpha(opacity * 255 * (intersections[id].color !== bg ? options.colors_grain : 1) * mm)
                         fill(c_)
                         rect(x * M, y * M, do_.size, do_.size)
 
@@ -1579,20 +1562,20 @@ async function start_() {
 }
 
 function saveIntersectionSizes(x, y, id) {
-    if (!intersectionsSizes[id]) {
-        intersectionsSizes[id] = {
+    if (!intersections[id].max1) {
+        intersections[id] = {
+            color: intersections[id].color,
             xMin: Infinity,
             xMax: 0,
             yMin: Infinity,
             yMax: 0,
-            color: randomColor(),
             bg: false,
             min1: 0,
             max1: R.random_num(options.texture_max, 1),
             reverse: options.texture_dir_reverse_static ? options.texture_dir_reverse : R.random_bool(0.5),
         }
     } else {
-        let item = intersectionsSizes[id];
+        let item = intersections[id];
         if (x < item.xMin) item.xMin = x;
         if (x > item.xMax) item.xMax = x;
         if (y < item.yMin) item.yMin = y;
@@ -1656,10 +1639,10 @@ function setColors(x, y) {
     let shape = isShapeCollide(x, y);
     if (shape === 'stop') return { shape };
     let id = saveIntersection(shape);
-    let c = intersections[id];
+    let c = intersections[id].color;
     saveIntersectionSizes(x, y, id);
-    if (c === bg && intersectionsSizes[id].bg) {
-        c = intersectionsSizes[id].color;
+    if (c === bg && intersections[id].bg) {
+        c = intersections[id].color;
     }
     if (isColor(c)) fill(c)
     return { c, id, shape }
@@ -1668,7 +1651,9 @@ function setColors(x, y) {
 function saveIntersection(arr) {
     let id = arr.map(x => x.id).sort((a, b) => { return a - b }).join('_');
     if (!intersections[id]) {
-        intersections[id] = randomColor()
+        intersections[id] = {
+            color: randomColor()
+        }
     }
     return id;
 }
