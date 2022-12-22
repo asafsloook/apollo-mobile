@@ -1485,10 +1485,10 @@ function start_() {
         size: 0.99 * M * (M > 1 ? 1.2 : 1)
     }
     for (let y = start; y < end * ratio; y += do_.draw_inc) {
-        setTimeout(() => {
+        setTimeout(async () => {
             for (let x = start; x < end; x += do_.draw_inc) {
 
-                let { c, id, shape } = setColors(x, y);
+                let { c, id, shape } = await setColors(x, y);
 
                 helper[`${x}_${y}`] = { c, id, shape };
 
@@ -1505,7 +1505,7 @@ function start_() {
 
                 state.color++;
             }
-        }, 0)
+        }, 33)
     }
     setTimeout(() => {
         if (options.shapes_border) {
@@ -1534,7 +1534,7 @@ function start_() {
                         if (c_.levels[3] > 50) state.grain++;
 
                     }
-                }, 0)
+                }, 33)
             }
 
             setTimeout(() => {
@@ -1556,9 +1556,9 @@ function start_() {
                 }, 100)
 
 
-            }, DEFAULT_SIZE)
+            }, DEFAULT_SIZE*33)
         }
-    }, DEFAULT_SIZE)
+    }, DEFAULT_SIZE*33)
 }
 
 function saveIntersectionSizes(x, y, id) {
@@ -1615,28 +1615,30 @@ function isPointInSquare(x, y, shape) {
 }
 
 function isShapeCollide(x, y) {
-    let res = [];
-    for (let i = 0; i < shapes.length; i++) {
-        let shape = shapes[i];
-
-        if (shape.type === 'circle')
-            if (isPointInCircle(x, y, shape))
-                res.push(shape);
-
-        if (['square', 'rectangle'].includes(shape.type))
-            if (isPointInSquare(x, y, shape))
-                res.push(shape);
-
-        if (shape.type === 'triangle')
-            if (isPointInTriangle({ x, y }, shape.p1, shape.p2, shape.p3))
-                res.push(shape);
-    }
-    if (res.length > 0) return res;
-    return 'stop';
+    return new Promise((resolve)=>{
+        let res = [];
+        for (let i = 0; i < shapes.length; i++) {
+            let shape = shapes[i];
+    
+            if (shape.type === 'circle')
+                if (isPointInCircle(x, y, shape))
+                    res.push(shape);
+    
+            if (['square', 'rectangle'].includes(shape.type))
+                if (isPointInSquare(x, y, shape))
+                    res.push(shape);
+    
+            if (shape.type === 'triangle')
+                if (isPointInTriangle({ x, y }, shape.p1, shape.p2, shape.p3))
+                    res.push(shape);
+        }
+        if (res.length > 0) resolve(res);
+        resolve('stop');
+    })
 }
 
-function setColors(x, y) {
-    let shape = isShapeCollide(x, y);
+async function setColors(x, y) {
+    let shape = await isShapeCollide(x, y);
     if (shape === 'stop') return { shape };
     let id = saveIntersection(shape);
     let c = intersections[id];
