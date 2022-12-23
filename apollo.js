@@ -1493,7 +1493,7 @@ async function start_() {
 
                 let { c, id, shape } = setColors(x, y);
 
-                // helper[`${x}_${y}`] = { c, id, shape };
+                helper[`${x}_${y}`] = { c, id, shape };
 
                 if (c === 'BLANK') continue;
 
@@ -1513,13 +1513,13 @@ async function start_() {
 
 
             for (let y = start; y < end * ratio; y += do_.draw_inc) {
-                if(R.random_bool(0.5)) await waiter(1);
+                if(R.random_bool(0.1)) await waiter(0);
                     for (let x = start; x < end; x += do_.draw_inc) {
                         if (R.random_bool(options.stroke)) continue;
 
-                        // let { c, id, shape } = helper[`${x}_${y}`];
+                        let { c, id, shape } = helper[`${x}_${y}`];
 
-                        let { c, id, shape } = setColors(x, y);
+                        // let { c, id, shape } = setColors(x, y);
 
                         if (options.out_frame && stopDraw(shape, x, y, s)) continue;
 
