@@ -55,7 +55,7 @@ class Random {
 let DEFAULT_SIZE = 1000, R = new Random(), DIM, M, colors = {}, grid = 0,
     options = {}, shapes = [], intersections = {},
     lines = { vert: {}, horiz: {}, diagonal: [] }, bg = '#e0dacc', min_stroke = 1,
-    max_stroke = 2.5, helper = {}, state = { color: 0, grain: 0 }, density = 2;
+    max_stroke = 2.5, helper = {}, state = {  }, density = 2;
 
 const paletteNames = {
     "1": "Zeus",
@@ -1510,7 +1510,6 @@ async function start_() {
                 if (isColor(c)) rect(x * M, y * M, do_.size, do_.size)
                 else image(c, x * M, y * M, do_.size, do_.size, x, y, do_.size / M, do_.size / M)
 
-                state.color++;
             }
     }
         if (options.shapes_border) {
@@ -1539,14 +1538,8 @@ async function start_() {
                         fill(c_)
                         rect(x * M, y * M, do_.size, do_.size)
 
-                        if (c_.levels[3] > 50) state.grain++;
-
                     }
             }
-
-            console.log(`color ${state.color}`)
-
-            console.log(`grain ${state.grain}`)
 
             shapesBorder(true);
             randomSketching();
