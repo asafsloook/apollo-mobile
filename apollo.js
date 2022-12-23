@@ -419,8 +419,8 @@ function squareBG(r = 0, c = 0, g = 1) {
 }
 
 function randomTri() {
-    let min = -DEFAULT_SIZE * 0.1;
-    let max = DEFAULT_SIZE * 1.1;
+    let min = -DEFAULT_SIZE * 0.1 * options.ratio;
+    let max = DEFAULT_SIZE * 1.1 * options.ratio;
     let getRange = () => {
         return R.random_num(0, DEFAULT_SIZE)
     }
@@ -470,7 +470,7 @@ function randomColor(isBG) {
     let p = R.random_choice(colors.pattern)
     if (!isBG && !R.random_bool(options.texture_prob)) return bg;
     if (!isBG && R.random_bool(options.empty ? options.empty_prob : 0)) return 'BLANK';
-    return R.random_choice([c, c]);
+    return R.random_choice([c, c, p]);
 }
 
 function drawMainShapes() {
