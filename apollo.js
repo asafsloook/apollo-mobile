@@ -55,7 +55,7 @@ class Random {
 let DEFAULT_SIZE = 1000, R = new Random(), DIM, M, colors = {}, grid = 0,
     options = {}, shapes = [], intersections = {},
     lines = { vert: {}, horiz: {}, diagonal: [] }, bg = '#e0dacc', min_stroke = 1,
-    max_stroke = 2.5, helper = {}, state = { color: 0, grain: 0 }, density = 2;
+    max_stroke = 2.5, helper = {}, state = { color: 0, grain: 0 }, density = 1;
 
 const paletteNames = {
     "1": "Zeus",
@@ -1487,7 +1487,6 @@ async function start_() {
     if (options.out_frame) {
         start = 0;
         end = DEFAULT_SIZE;
-        ratio = 1;
     }
     const do_ = {
         draw_inc: 0.5,
