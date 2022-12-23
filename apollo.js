@@ -247,6 +247,10 @@ function setup() {
     pixelAndDim();
 
     createCanvas(DIM, getHeight_());
+
+    document.addEventListener('dblclick',()=>{
+        window.location.reload();
+    })
 }
 
 function getHeight_() {
