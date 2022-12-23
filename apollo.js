@@ -470,7 +470,7 @@ function randomColor(isBG) {
     let p = R.random_choice(colors.pattern)
     if (!isBG && !R.random_bool(options.texture_prob)) return bg;
     if (!isBG && R.random_bool(options.empty ? options.empty_prob : 0)) return 'BLANK';
-    return R.random_choice([c, c, p]);
+    return R.random_choice([c, c]);
 }
 
 function drawMainShapes() {
@@ -980,15 +980,12 @@ function setOneShape(r, c, shape_, size_, rect_) {
     let shape = shape_;
 
     let id = genId();
-    let color = randomColor();
-    intersections[id] = {color}
 
     switch (shape) {
         case 'circle':
             let cc = {
                 ...getCirclePos(r, c),
                 type: shape,
-                color: color,
                 id: id,
                 total: 1
             };
@@ -1000,7 +997,6 @@ function setOneShape(r, c, shape_, size_, rect_) {
             let t = {
                 ...getTrianglePos(r, c, size_),
                 type: shape,
-                color: color,
                 id: id
             };
             shapes.push(t);
@@ -1015,7 +1011,6 @@ function setOneShape(r, c, shape_, size_, rect_) {
                 ...getShapePos(r, c),
                 w, h,
                 type: shape,
-                color: color,
                 id: id
             };
             if (shape === 'square') {
@@ -1260,7 +1255,7 @@ function setBG() {
     let shape = getLastShape();
     let c = randomColor(true)
     shape.color = c;
-    intersections[shape.id] = c;
+    intersections[shape.id] = { color: c};
     shape.bg = true;
 }
 
@@ -1500,7 +1495,7 @@ async function start_() {
 
                 let { c, id, shape } = setColors(x, y);
 
-                helper[`${x}_${y}`] = { c, id, shape };
+                // helper[`${x}_${y}`] = { c, id, shape };
 
                 if (c === 'BLANK') continue;
 
@@ -1520,10 +1515,13 @@ async function start_() {
 
 
             for (let y = start; y < end * ratio; y += do_.draw_inc) {
-                if(R.random_bool(0.25)) await waiter(1);
+                if(R.random_bool(0.5)) await waiter(1);
                     for (let x = start; x < end; x += do_.draw_inc) {
                         if (R.random_bool(options.stroke)) continue;
-                        let { c, id, shape } = helper[`${x}_${y}`];
+
+                        // let { c, id, shape } = helper[`${x}_${y}`];
+
+                        let { c, id, shape } = setColors(x, y);
 
                         if (options.out_frame && stopDraw(shape, x, y, s)) continue;
 
