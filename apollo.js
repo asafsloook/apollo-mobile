@@ -1004,7 +1004,7 @@ function setOneShape(r, c, shape_, size_, rect_) {
         case 'square':
         case 'rectangle':
             let size = getShapeSize() * (size_ || 0.8);
-            let rectSize = DEFAULT_SIZE * (1 - options.frame_border * 2) - size * 0.25;
+            let rectSize = DEFAULT_SIZE * (1 - options.frame_border * 2) - size * 0.25 * options.ratio;
             let w = (shape === 'rectangle' && rect_ ? rectSize : size);
             let h = (shape === 'rectangle' && !rect_ ? rectSize : size);
             let ss = {
@@ -1384,7 +1384,7 @@ function changePos(s, sizex, sizey) {
 function fixRatioShapesPos() {
     for (const s of shapes) {
         if (s.square_bg) continue;
-        const size = (DEFAULT_SIZE - DEFAULT_SIZE * options.ratio) / 2;
+        const size = (DEFAULT_SIZE * options.ratio - DEFAULT_SIZE) / 2;
         s.y += size
         if (s.type === 'triangle') {
             s.p1.y += size
