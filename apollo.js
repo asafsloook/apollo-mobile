@@ -567,9 +567,7 @@ function drawMainShapes() {
         let circles = [];
         const types = [
             [2, 4, 8],
-            [3, 6, 12]
         ];
-        if (R.random_bool(0.1)) types.push([5, 10, 20])
         let sizes = R.random_choice(types);
         let type = R.random_dec();
         let chance = 0
